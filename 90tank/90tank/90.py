@@ -14,7 +14,6 @@ screen=pygame.display.set_mode([23*26+100,23*26])
 
 playerpos=[23*8,23*24] #coordinate of player
 #wallplace=[]           #coordinate of all wall
-stage=1
 paolist=[]             #coordinate of all bullet
 boomlist=[]            #coordinate of all explosion
 enemylist=[]           #save all enemy
@@ -122,6 +121,7 @@ playerlist=[player0,player1,player2,player3,player4,player5,player6,player7]
 walltype=[wood,ice,eternalice,tree,tree]
 
 page = 1000 #1000表示战斗页面，500表示结算页面
+stage=2
 enemynum=3
 blood=4
 mf=0        #控制动画为奇数帧或偶数帧的计数flag
@@ -134,8 +134,6 @@ mspawnpoint=600
 rspawnpoint=600
 leftenemynum = 17
 Direction=0 #0meansfront 2meansbehind 4meansleft 6meansright
-
-#战斗阶段的界面刷新
 def refresh():
     global lspawnpoint
     global mspawnpoint
@@ -145,25 +143,21 @@ def refresh():
     boom()
     screen.fill(0)
     
-    #木墙和冰（白色的）加载
     for i in wallplace:
         if i[1]<3:
             screen.blit(walltype[i[1]],[i[0][0]*23,i[0][1]*23])
-    #基地加载
+        
     if Bird:
         screen.blit(bird,[23*12,23*24])
     else:
         screen.blit(ruinedbird,[23*12,23*24])
-    #玩家加载
     screen.blit(playerlist[Direction+mf%2],playerpos)
-    #敌人刷新点倒计时
     if lspawnpoint>0:
         lspawnpoint-=1
     if mspawnpoint>0:
         mspawnpoint-=1
     if rspawnpoint>0:
         rspawnpoint-=1
-    #加载出生星星
     if lspawnpoint>350:
         if lspawnpoint//15%2:
             screen.blit(f1,[0,0])
@@ -179,7 +173,6 @@ def refresh():
             screen.blit(f1,[23*24,0])
         else:
             screen.blit(f2,[23*24,0])
-    #炮弹移动
     for i in paolist:
         screen.blit(pao,i.paopos)
         if   i.Direction==0:
@@ -193,15 +186,15 @@ def refresh():
             
         elif i.Direction==6:
             i.paopos[0]+=2
-    #爆炸贴图 
+            
     for i in boomlist:
         screen.blit(Boom,i[0])
+    
+    
 
-    #敌人加载
     for i in enemylist:
         screen.blit(enemykindlist[i.Type][i.blood-1][i.Direction+mf%2],i.enemypos)
 
-    #文本内容
     t = pygame.font.SysFont(None,30)
     screen.blit(t.render('IP',1,(255,0,0)),(23*27+5,70))
     screen.blit(t.render(str(goal),1,(255,0,0)),(23*27+3,100))
@@ -210,19 +203,18 @@ def refresh():
     screen.blit(t.render('X',1,(255,0,0)),(23*27+5+30,167))
     screen.blit(t.render(str(blood),1,(255,0,0)),(23*27+5+45,167))
     
-    #gameover
+
     if blood==0 or Bird == False:
         if ending_voice_flag:
             ending_voice.play()
             ending_voice_flag=False
         screen.blit(over,[23*7,23*9])
 
-    #加载树（遮挡视线）
     for i in wallplace:
         if i[1]==3:
             screen.blit(walltype[i[1]],[i[0][0]*23,i[0][1]*23])
 
-#结算阶段的界面刷新
+
 def refresh_statistics():
     if page==500:
         f = [0,0,0]
@@ -231,18 +223,19 @@ def refresh_statistics():
             for j in range (current_goal[i]+1):
                 f[i]=j
                 screen.blit(statistics,[0,0])
-                screen.blit(t.render(str(f[0]),1,(2,255,1)),(6*23+20,6*23-5))
-                screen.blit(t.render(str(f[0]*100),1,(2,255,1)),(11*23,6*23-5))
-                screen.blit(t.render(str(0),1,(2,255,1)),(6*23+20,11*23-10))
-                screen.blit(t.render(str(0),1,(2,255,1)),(11*23,11*23-10))
-                screen.blit(t.render(str(f[1]),1,(2,255,1)),(6*23+20,16*23-15))
-                screen.blit(t.render(str(f[1]*300),1,(2,255,1)),(11*23,16*23-15))
-                screen.blit(t.render(str(f[2]),1,(2,255,1)),(6*23+20,21*23-20))
-                screen.blit(t.render(str(f[2]*400),1,(2,255,1)),(11*23,21*23-20))
-                screen.blit(t.render(str(f[0]*100+f[1]*300+f[2]*400),1,(2,255,1)),(10*23,24*23))
+                screen.blit(t.render(str(f[0]),1,(2,255,1)),(7*23,6*23-6))
+                screen.blit(t.render(str(0),1,(2,255,1)),(7*23,11*23-9))
+                screen.blit(t.render(str(f[1]),1,(2,255,1)),(7*23,16*23-12))
+                screen.blit(t.render(str(f[2]),1,(2,255,1)),(7*23,21*23-15))
+
+                screen.blit(t.render(str(f[0]*100),1,(2,255,1)),(11*23,6*23-6))
+                screen.blit(t.render(str(0),1,(2,255,1)),(11*23,11*23-9))
+                screen.blit(t.render(str(f[1]*300),1,(2,255,1)),(11*23,16*23-12))
+                screen.blit(t.render(str(f[2]*400),1,(2,255,1)),(11*23,21*23-15))
+
+                screen.blit(t.render(str(f[0]*100+f[1]*300+f[2]*400),1,(2,255,1)),(10*23+10,24*23-5))
                 pygame.time.delay(100)
                 pygame.display.flip()
-                
 
         
 
@@ -255,12 +248,10 @@ clock = 0
 def enemymove():
     global clock
     for i in enemylist:
-        point = False 
-        flag = False 
-        #一般移动，不改变方向，判断方向，四周不是墙
+        point = False
+        flag = False
         if   i.Direction==0 and notwallup(i.enemypos,0) and notwallup(i.enemypos,1) and notwallup(i.enemypos,2) and notwallup(i.enemypos,4):
             for j in enemylist:
-                #如果存在过近的其他坦克，point改为true
                 if i.enemypos!=j.enemypos and 0<i.enemypos[1]-j.enemypos[1]<=46 and abs(j.enemypos[0]-i.enemypos[0])<=46: 
                     point=True
             if point!=True:
@@ -292,7 +283,6 @@ def enemymove():
                 i.enemypos[0]+=i.speed
                 flag = True
 
-        #整数坐标时移动，可能改变方向
         if i.enemypos[0]%23==0 and i.enemypos[1]%23==0:
             if random.randint(0,10)%5==0:
                 if clock<=0:
@@ -300,7 +290,6 @@ def enemymove():
                     clock=50
             flag = True
 
-        #避免抢格卡死，倒退转向
         if flag==False:
             if i.Direction == 0:
                 i.enemypos[1]+=i.speed
@@ -400,7 +389,7 @@ def boom():
     for i in paolist:
         flag=False
 
-        #判断炮弹来源是player/enemy
+
         if i.source == 0:
             for j in enemylist:
                 if -23<i.paopos[0]-j.enemypos[0]<=46 and -23<i.paopos[1]-j.enemypos[1]<=46:
@@ -408,6 +397,7 @@ def boom():
                         boom_voice.play()
                         enemylist.remove(j)
                         current_goal[j.Type]+=1
+                        #print(current_goal)
                         goal+=j.goal
                         enemynum-=1
                     else:
@@ -425,21 +415,21 @@ def boom():
                     dead_voice.play()
                     playerpos=[23*8,23*24]
 
-        #炮弹相撞
+
         for j in paolist:
             if abs(i.paopos[0]-j.paopos[0])<=23 and abs(i.paopos[1]-j.paopos[1])<=23 and i.source!=j.source:
                 boomlist.append([[i.paopos[0]-9,i.paopos[1]-14],5])
                 paolist.remove(i)
                 paolist.remove(j)
 
-        #炮弹摧毁基地  
+        #print(i.paopos)   
         if 11.5*23<=i.paopos[0]<=14*23 and 23.5*23<=i.paopos[1]<=26*23:
             Bird=False
             boomlist.append([[i.paopos[0]-9,i.paopos[1]-14],5])
             paolist.remove(i)
             break
             
-        #炮弹撞击墙壁 
+            
         if   i.Direction==0:  
             if [[i.paopos[0]//23,math.ceil(i.paopos[1]/23)-1],0] in wallplace:
                 flag=True
@@ -531,7 +521,6 @@ def setplace(pos,Type,Direction):
     wallplace.append([[pos[0]//23,pos[1]//23+1],Type])
     wallplace.append([[pos[0]//23+1,pos[1]//23],Type])
     wallplace.append([[pos[0]//23+1,pos[1]//23+1],Type])
-
     '''if Direction == 0 and pos[0]//23!=0:
         wallplace.append([[playerpos[0]//23,playerpos[1]//23+2],4])
         wallplace.append([[playerpos[0]+1//23,playerpos[1]//23+2],4])
@@ -560,7 +549,7 @@ while 1:
                     if(stage==3):
                         stage=1
                     
-                    leftenemynum=17
+                    leftenemynum=1
                     current_goal = [0,0,0]
                     press=False
                     lspawnpoint=600
@@ -604,7 +593,8 @@ while 1:
                 setplace(i.enemypos,5,i.Direction)
 
             setplace(playerpos,4,Direction)
-
+            
+            
 
             pygame.time.delay(4) 
             playergif()
@@ -613,6 +603,7 @@ while 1:
             setenemy()
             enemyattack()
             pygame.display.flip()
+
             
             
             if rspawnpoint==mspawnpoint==lspawnpoint==0 and enemynum!=4 and leftenemynum>0:
@@ -629,7 +620,7 @@ while 1:
                 pass
                 #print(rspawnpoint,mspawnpoint,lspawnpoint)
             
-            #有命令键按下并且player在整格位置
+            #有命令键按下并且player在整数格位置
             if press or playerpos[0]%23!=0 or playerpos[1]%23!=0:
                 if   Direction==0 and notwallup(playerpos,0) and notwallup(playerpos,1) and notwallup(playerpos,2) and notwallup(playerpos,5):
                     playerpos[1]-=1    
