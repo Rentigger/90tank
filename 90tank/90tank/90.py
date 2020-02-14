@@ -118,7 +118,7 @@ reduction_voice.set_volume(0.5)
 
 
 playerlist=[player0,player1,player2,player3,player4,player5,player6,player7]
-walltype=[wood,ice,eternalice,tree,tree]
+walltype=[wood,ice,eternalice,tree,tree,tree,water]
 
 page = 1000 #1000表示战斗页面，500表示结算页面
 stage=2
@@ -146,6 +146,10 @@ def refresh():
     for i in wallplace:
         if i[1]<3:
             screen.blit(walltype[i[1]],[i[0][0]*23,i[0][1]*23])
+
+    for i in wallplace:
+        if i[1]==6:
+            screen.blit(walltype[6][(mf%100)//50],[i[0][0]*23,i[0][1]*23])
         
     if Bird:
         screen.blit(bird,[23*12,23*24])
@@ -215,6 +219,8 @@ def refresh():
             screen.blit(walltype[i[1]],[i[0][0]*23,i[0][1]*23])
 
 
+
+
 def refresh_statistics():
     if page==500:
         f = [0,0,0]
@@ -250,7 +256,7 @@ def enemymove():
     for i in enemylist:
         point = False
         flag = False
-        if   i.Direction==0 and notwallup(i.enemypos,0) and notwallup(i.enemypos,1) and notwallup(i.enemypos,2) and notwallup(i.enemypos,4):
+        if   i.Direction==0 and notwallup(i.enemypos,0) and notwallup(i.enemypos,1) and notwallup(i.enemypos,2) and notwallup(i.enemypos,4) and notwallup(i.enemypos,6):
             for j in enemylist:
                 if i.enemypos!=j.enemypos and 0<i.enemypos[1]-j.enemypos[1]<=46 and abs(j.enemypos[0]-i.enemypos[0])<=46: 
                     point=True
@@ -258,7 +264,7 @@ def enemymove():
                 i.enemypos[1]-=i.speed
                 flag = True
         
-        elif i.Direction==2 and notwallleft(i.enemypos,0) and notwallleft(i.enemypos,1) and notwallleft(i.enemypos,2) and notwallleft(i.enemypos,4):
+        elif i.Direction==2 and notwallleft(i.enemypos,0) and notwallleft(i.enemypos,1) and notwallleft(i.enemypos,2) and notwallleft(i.enemypos,4) and notwallleft(i.enemypos,6):
             for j in enemylist:
                 if i.enemypos!=j.enemypos and 0<i.enemypos[0]-j.enemypos[0]<=46 and abs(j.enemypos[1]-i.enemypos[1])<=46:
                     i.enemypos[0]-j.enemypos[0]
@@ -267,7 +273,7 @@ def enemymove():
                 i.enemypos[0]-=i.speed
                 flag = True
             
-        elif i.Direction==4 and notwalldown(i.enemypos,0) and notwalldown(i.enemypos,1) and notwalldown(i.enemypos,2) and notwalldown(i.enemypos,4):
+        elif i.Direction==4 and notwalldown(i.enemypos,0) and notwalldown(i.enemypos,1) and notwalldown(i.enemypos,2) and notwalldown(i.enemypos,4) and notwalldown(i.enemypos,6):
             for j in enemylist:
                 if i.enemypos!=j.enemypos and 0<j.enemypos[1]-i.enemypos[1]<=46 and abs(j.enemypos[0]-i.enemypos[0])<=46:
                     point=True
@@ -275,7 +281,7 @@ def enemymove():
                 i.enemypos[1]+=i.speed
                 flag = True
             
-        elif i.Direction==6 and notwallright(i.enemypos,0) and notwallright(i.enemypos,1) and notwallright(i.enemypos,2) and notwallright(i.enemypos,4):
+        elif i.Direction==6 and notwallright(i.enemypos,0) and notwallright(i.enemypos,1) and notwallright(i.enemypos,2) and notwallright(i.enemypos,4) and notwallright(i.enemypos,6):
             for j in enemylist:
                 if i.enemypos!=j.enemypos and 0<j.enemypos[0]-i.enemypos[0]<=46 and abs(j.enemypos[1]-i.enemypos[1])<=46:
                     point=True
@@ -622,16 +628,16 @@ while 1:
             
             #有命令键按下并且player在整数格位置
             if press or playerpos[0]%23!=0 or playerpos[1]%23!=0:
-                if   Direction==0 and notwallup(playerpos,0) and notwallup(playerpos,1) and notwallup(playerpos,2) and notwallup(playerpos,5):
+                if   Direction==0 and notwallup(playerpos,0) and notwallup(playerpos,1) and notwallup(playerpos,2) and notwallup(playerpos,5) and notwallup(playerpos,6):
                     playerpos[1]-=1    
                     
-                elif Direction==2 and notwallleft(playerpos,0) and notwallleft(playerpos,1) and notwallleft(playerpos,2) and notwallleft(playerpos,5):
+                elif Direction==2 and notwallleft(playerpos,0) and notwallleft(playerpos,1) and notwallleft(playerpos,2) and notwallleft(playerpos,5) and notwallleft(playerpos,6):
                     playerpos[0]-=1
                     
-                elif Direction==4 and notwalldown(playerpos,0) and notwalldown(playerpos,1) and notwalldown(playerpos,2) and notwalldown(playerpos,5):
+                elif Direction==4 and notwalldown(playerpos,0) and notwalldown(playerpos,1) and notwalldown(playerpos,2) and notwalldown(playerpos,5) and notwalldown(playerpos,6):
                     playerpos[1]+=1
                     
-                elif Direction==6 and notwallright(playerpos,0) and notwallright(playerpos,1) and notwallright(playerpos,2) and notwallright(playerpos,5):
+                elif Direction==6 and notwallright(playerpos,0) and notwallright(playerpos,1) and notwallright(playerpos,2) and notwallright(playerpos,5) and notwallright(playerpos,6):
                     playerpos[0]+=1
 
 
