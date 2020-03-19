@@ -121,7 +121,7 @@ playerlist=[player0,player1,player2,player3,player4,player5,player6,player7]
 walltype=[wood,ice,eternalice,tree,tree,tree,water]
 
 page = 1000 #1000表示战斗页面，500表示结算页面
-stage=2
+stage=1
 enemynum=3
 blood=4
 mf=0        #控制动画为奇数帧或偶数帧的计数flag
@@ -132,8 +132,10 @@ Bird=True
 lspawnpoint=600
 mspawnpoint=600
 rspawnpoint=600
-leftenemynum = 17
+leftenemynum = 3
 Direction=0 #0meansfront 2meansbehind 4meansleft 6meansright
+
+#逐帧刷新页面，图片在此函数内加载
 def refresh():
     global lspawnpoint
     global mspawnpoint
@@ -220,7 +222,7 @@ def refresh():
 
 
 
-
+#结算界面的画面加载
 def refresh_statistics():
     if page==500:
         f = [0,0,0]
@@ -427,6 +429,7 @@ def boom():
                 boomlist.append([[i.paopos[0]-9,i.paopos[1]-14],5])
                 paolist.remove(i)
                 paolist.remove(j)
+            #print(paolist)
 
         #print(i.paopos)   
         if 11.5*23<=i.paopos[0]<=14*23 and 23.5*23<=i.paopos[1]<=26*23:
@@ -555,7 +558,6 @@ while 1:
                     if(stage==3):
                         stage=1
                     
-                    leftenemynum=1
                     current_goal = [0,0,0]
                     press=False
                     lspawnpoint=600
@@ -568,6 +570,7 @@ while 1:
                     boomlist=[]          
                     enemylist=[]
                     enemynum=3
+                    leftenemynum = 17
 
                     begin_voice.play()
                 break
