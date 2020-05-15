@@ -29,7 +29,7 @@ ruinedbird = pygame.image.load('90/ruinedbird.jpg').convert_alpha()
 f1=pygame.image.load('90/f1.jpg').convert_alpha()
 f2=pygame.image.load('90/f2.jpg').convert_alpha()
 life=pygame.image.load('90/life.png').convert_alpha()
-shield = [pygame.image.load('90/shield1.png').convert_alpha(),pygame.image.load('90/shield2.png').convert_alpha()]
+#shield = [pygame.image.load('90/shield1.png').convert_alpha(),pygame.image.load('90/shield2.png').convert_alpha()]
 enemybf00=pygame.image.load('90/enemybf00.png').convert_alpha()
 enemybf01=pygame.image.load('90/enemybf01.png').convert_alpha()
 enemybl00=pygame.image.load('90/enemybl00.png').convert_alpha()
@@ -105,11 +105,6 @@ water=[pygame.image.load('90/water0.png').convert_alpha(),
        pygame.image.load('90/water1.png').convert_alpha()]
 eternalice=pygame.image.load('90/ice.jpg').convert_alpha()
 
-
-'''pygame.mixer.music.load("CLIFF EDGE - Endless Tears.mp3")
-pygame.mixer.music.set_volume(0.5) 
-pygame.mixer.music.play()'''
-
 begin_voice = pygame.mixer.Sound("begin.wav")
 begin_voice.set_volume(0.5)
 begin_voice.play()
@@ -131,7 +126,6 @@ props_voice = pygame.mixer.Sound("props.wav")
 props_voice.set_volume(0.5)
 
 
-
 playerlist=[player0,player1,player2,player3,player4,player5,player6,player7]
 playerlist1_5=[player1_0,player1_0,player1_2,player1_2,player1_4,player1_4,player1_6,player1_6]
 playerlist2_0=[player2_0,player2_0,player2_2,player2_2,player2_4,player2_4,player2_6,player2_6]
@@ -144,7 +138,7 @@ props = {'grenade':pygame.image.load('90/props/grenade.jpg').convert_alpha(),
          'stop':pygame.image.load('90/props/stop.jpg').convert_alpha()}
 proppos = [23*random.randint(3,23),23*random.randint(3,23)]
 props_clock = 1000
-prop_choice = 'star'
+prop_choice = 'shovel'
 #prop_choice = random.sample(props.keys(),1)[0]
 stop_clock = 0
 hat_clock = 0
@@ -271,8 +265,6 @@ def refresh():
         screen.blit(props[prop_choice],proppos)
     if hat_clock:
         screen.blit(hat_image[mf%30//15],playerpos)
-
-
 
 
 #结算界面的画面加载
@@ -683,7 +675,8 @@ def prop_effect():
         shovel_clock = 1500
     #星星效果
     elif prop_choice == 'star':
-        player_blood += 0.5
+        if health<2:
+            health += 0.5
     #秒表（暂停效果）
     elif prop_choice == 'stop':
         stop_clock = 2000
@@ -718,6 +711,10 @@ while 1:
                     enemylist=[]
                     enemynum=3
                     leftenemynum = 17
+                    props_clock=0
+                    stop_clock=0
+                    hat_clock=0
+                    shovel_clock=0
 
                     begin_voice.play()
                 break
@@ -754,12 +751,16 @@ while 1:
                 shovel_clock-=1
                 if shovel_clock == 0:
                     for i in range(23,26):
-                        wallplace.remove([[11,i],1])
-                        wallplace.remove([[14,i],1])
+                        if [[11,i],1] in wallplace:
+                            wallplace.remove([[11,i],1])
+                        if [[14,i],1] in wallplace:
+                            wallplace.remove([[14,i],1])
                         wallplace.insert(0,[[11,i],0])
                         wallplace.insert(0,[[14,i],0])
-                    wallplace.remove([[12,23],1])
-                    wallplace.remove([[13,23],1])   
+                    if [[12,23],1] in wallplace:
+                        wallplace.remove([[12,23],1])
+                    if [[13,23],1] in wallplace:
+                        wallplace.remove([[13,23],1])
                     wallplace.insert(0,[[12,23],0])
                     wallplace.insert(0,[[13,23],0])
 
